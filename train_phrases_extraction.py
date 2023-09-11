@@ -63,15 +63,16 @@ def main():
     # print("Done SQ length: {}".format(len(sq_en)))
     # print("++++ Done Checking Duplicates ++++")
 
-    print("---- Checking Duplicates ----")
-    print(similarity('Is it real time transaction?', 'Is it a real-time transaction?'))
     sq_en = []
     dq_en = []
     for i in range(0, len(lq_training)):
         for question in lq_training[i]:
-            # for q in sq_en:
-            #     print(similarity(question, q))
-            if question not in sq_en:
+            is_duplicated = False
+            for q in sq_en:
+                if similarity(question, q) >= 1:
+                    is_duplicated = True
+
+            if not is_duplicated:
                 sq_en.append(question)
             else:
                 dq_en.append(question)
@@ -79,7 +80,11 @@ def main():
     print("Before: {}".format(len(sum(lq_training, []))))
     for i in range(0, len(lq_training)):
         for question in lq_training[i]:
-            if question in dq_en:
+            is_duplicated = False
+            for q in dq_en:
+                if similarity(question, q) >= 1:
+                    is_duplicated = True
+            if is_duplicated:
                 lq_training[i].remove(question)
     print("After: {}".format(len(sum(lq_training, []))))
     print("++++ Done Checking Duplicates ++++")
